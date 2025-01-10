@@ -1,0 +1,18 @@
+@startuml interpreter
+interface Expression {
+    +interpret(context: Context): int
+}
+
+class TerminalExpression implements Expression {
+    +interpret(context: Context): int
+}
+
+class NonTerminalExpression implements Expression {
+    +interpret(context: Context): int
+}
+
+class Context {}
+
+TerminalExpression --> Expression
+NonTerminalExpression --> Expression
+@enduml

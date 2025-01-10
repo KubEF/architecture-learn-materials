@@ -1,0 +1,13 @@
+@startuml chain
+abstract class Handler {
+    -next: Handler
+    +setNext(handler: Handler): void
+    +handle(request: Request): void
+}
+
+class ConcreteHandlerA extends Handler {}
+class ConcreteHandlerB extends Handler {}
+
+ConcreteHandlerA --> Handler
+ConcreteHandlerB --> Handler
+@enduml

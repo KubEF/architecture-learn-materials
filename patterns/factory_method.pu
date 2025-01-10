@@ -1,0 +1,21 @@
+@startuml factory_method
+abstract class Creator {
+    +createProduct(): Product
+}
+
+abstract class Product {
+    +use(): void
+}
+
+class ConcreteCreator implements Creator {
+    +createProduct(): Product
+}
+
+class ConcreteProduct implements Product {
+    +use(): void
+}
+
+Creator --> Product
+ConcreteCreator --> Creator
+ConcreteProduct --> Product
+@enduml

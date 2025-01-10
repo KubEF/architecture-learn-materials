@@ -1,0 +1,18 @@
+@startuml composite
+interface Component {
+    +operation(): void
+}
+
+class Leaf implements Component {
+    +operation(): void
+}
+
+class Composite implements Component {
+    +add(component: Component): void
+    +remove(component: Component): void
+    +operation(): void
+}
+
+Composite --> Component
+Leaf --> Component
+@enduml

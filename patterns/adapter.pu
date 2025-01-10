@@ -1,0 +1,16 @@
+@startuml adapter
+interface Target {
+    +request(): void
+}
+
+class Adapter implements Target {
+    +request(): void
+}
+
+class Adaptee {
+    +specificRequest(): void
+}
+
+Adapter --> Target
+Adapter ..> Adaptee : adapts
+@enduml

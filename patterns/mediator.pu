@@ -1,0 +1,22 @@
+@startuml mediator
+interface Mediator {
+    +notify(sender: Component, event: String): void
+}
+
+class ConcreteMediator implements Mediator {
+    +notify(sender: Component, event: String): void
+}
+
+abstract class Component {
+    -mediator: Mediator
+    +setMediator(mediator: Mediator): void
+}
+
+class ConcreteComponentA extends Component {}
+class ConcreteComponentB extends Component {}
+
+Component --> Mediator
+ConcreteComponentA --> Component
+ConcreteComponentB --> Component
+ConcreteMediator --> Component
+@enduml

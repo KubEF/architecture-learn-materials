@@ -1,0 +1,130 @@
+@startuml cli
+hide empty members
+class Environment {
+  - variables: Dict<String, String>
+  + setVariable(name: String, value: String): void
+  + getValue(name: String): String
+}
+
+class Output{
+  - exitCode: Int
+  - output: String
+  - errorMessage: String
+  + getOutput(): String
+}
+
+abstract Command{
+  - args: String [*]
+  + execute(): Output
+  + addArg(String): void
+}
+
+Command --> Output
+class Cat{}
+class Pwd{}
+class Echo{}
+class Wc{}
+class Bind{}
+class External{
+  - binFiles: Path [*]
+  - isFullPathToExecutable: Bool
+  + executableExists(): Bool
+}
+class Exit{}
+
+Cat --|> Command
+Pwd --|> Command
+Echo --|> Command
+Wc --|> Command
+Bind --|> Command
+External --|> Command
+Exit --|> Command
+
+class CommandQueue{
+  - commands: Command [*]
+  + addCommand(command: Command): void
+  + popCommand(): Command
+}
+CommandQueue --> Command
+
+class CommandRunner {
+  - commandsQueue: CommandQueue
+  - env: Environment
+  + executeCommands(): Output
+}
+
+CommandRunner --> CommandQueue
+CommandRunner --> Environment
+
+class Main{
+  + runInterpreter(): void
+}
+
+Main --> CommandRunner
+
+class CommandLine{
+  - prompt: String
+  + read(): String
+  + write(output: Output): void
+  + setPrompt(prompt: String): void
+}
+
+Main --> CommandLine
+
+interface Token{
+  - value: String
+  + getValue(): String 
+}
+
+class QuotedString{}
+class PlainWord{}
+class Pipe{}
+class EqualsSymbol{}
+
+QuotedString --|> Token
+PlainWord --|> Token
+Pipe --|> Token
+EqualsSymbol --|> Token
+
+
+abstract TokenizerState{
+  - env: Environment
+  - accumulated: String
+  - splitters: String [*]
+  + tokenize(): Token
+  + addToAccumulated(char: Char): void
+}
+
+TokenizerState --> Token
+
+class TokenizerNormal{
+  ' + toVariableState(): TokenizerVariable
+}
+
+class TokenizerStronglyQuoted{}
+
+class TokenizerWeaklyQuoted{
+  ' + toVariableState(): TokenizerVariable
+}
+
+class TokenizerVariable{}
+
+TokenizerNormal --|> TokenizerState
+TokenizerStronglyQuoted --|> TokenizerState
+TokenizerWeaklyQuoted --|> TokenizerState
+TokenizerVariable --|> TokenizerState
+TokenizerState --> Environment
+
+
+class Parser{
+  - input: String
+  - startTokenizerState: TokenizerState
+  - tokenize(): Token [*]
+  + parse(): CommandQueue
+}
+
+Parser --> TokenizerState
+
+Main --> Parser
+
+@enduml

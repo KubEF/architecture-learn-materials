@@ -1,0 +1,23 @@
+@startuml strategy
+interface Strategy {
+    +execute(): void
+}
+
+class ConcreteStrategyA implements Strategy {
+    +execute(): void
+}
+
+class ConcreteStrategyB implements Strategy {
+    +execute(): void
+}
+
+class Context {
+    -strategy: Strategy
+    +setStrategy(strategy: Strategy): void
+    +executeStrategy(): void
+}
+
+Context --> Strategy
+ConcreteStrategyA --> Strategy
+ConcreteStrategyB --> Strategy
+@enduml

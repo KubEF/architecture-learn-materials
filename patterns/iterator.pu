@@ -1,0 +1,22 @@
+@startuml iterator
+interface Iterator {
+    +next(): Element
+    +hasNext(): boolean
+}
+
+interface Aggregate {
+    +createIterator(): Iterator
+}
+
+class ConcreteIterator implements Iterator {
+    +next(): Element
+    +hasNext(): boolean
+}
+
+class ConcreteAggregate implements Aggregate {
+    +createIterator(): Iterator
+}
+
+ConcreteIterator --> Iterator
+ConcreteAggregate --> Aggregate
+@enduml

@@ -1,0 +1,16 @@
+@startuml flyweight
+class Flyweight {
+    +operation(extrinsicState: String): void
+}
+
+class ConcreteFlyweight implements Flyweight {
+    +operation(extrinsicState: String): void
+}
+
+class FlyweightFactory {
+    +getFlyweight(key: String): Flyweight
+}
+
+FlyweightFactory --> Flyweight
+ConcreteFlyweight --> Flyweight
+@enduml

@@ -1,0 +1,17 @@
+@startuml proxy
+interface Subject {
+    +request(): void
+}
+
+class RealSubject implements Subject {
+    +request(): void
+}
+
+class Proxy implements Subject {
+    -realSubject: RealSubject
+    +request(): void
+}
+
+RealSubject --> Subject
+Proxy --> Subject
+@enduml

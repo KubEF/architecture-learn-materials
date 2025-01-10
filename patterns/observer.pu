@@ -1,0 +1,18 @@
+@startuml observer
+interface Observer {
+    +update(subject: Subject): void
+}
+
+class Subject {
+    +attach(observer: Observer): void
+    +detach(observer: Observer): void
+    +notify(): void
+}
+
+class ConcreteObserver implements Observer {
+    +update(subject: Subject): void
+}
+
+Subject --> Observer
+ConcreteObserver --> Subject
+@enduml
