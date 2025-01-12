@@ -1,4 +1,6 @@
 @startuml visitor
+hide empty members
+
 interface Visitor {
     +visitElementA(element: ElementA): void
     +visitElementB(element: ElementB): void
@@ -8,20 +10,27 @@ interface Element {
     +accept(visitor: Visitor): void
 }
 
-class ConcreteVisitor implements Visitor {
-    +visitElementA(element: ElementA): void
-    +visitElementB(element: ElementB): void
+class ConcreteVisitor1 implements Visitor {
+    +visitElementA(element: ConcreteElementA): void
+    +visitElementB(element: ConcreteElementB): void
+}
+class ConcreteVisitor2 implements Visitor {
+    +visitElementA(element: ConcreteElementA): void
+    +visitElementB(element: ConcreteElementB): void
 }
 
-class ElementA implements Element {
+class ConcreteElementA implements Element {
     +accept(visitor: Visitor): void
 }
 
-class ElementB implements Element {
+class ConcreteElementB implements Element {
     +accept(visitor: Visitor): void
 }
+class ObjectStructure{}
 
-ElementA --> Element
-ElementB --> Element
-ConcreteVisitor --> Visitor
+ObjectStructure -> Element
+class Client{}
+Client -> Visitor
+Client --> ObjectStructure
+
 @enduml

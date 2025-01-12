@@ -1,18 +1,22 @@
 @startuml composite
+hide empty members
 interface Component {
-    +operation(): void
+    +add(component: Component): void
+    +remove(component: Component): void
+    +operation()
+    +getChild(int): Component
 }
 
 class Leaf implements Component {
-    +operation(): void
+    +operation()
 }
 
 class Composite implements Component {
     +add(component: Component): void
     +remove(component: Component): void
-    +operation(): void
+    +operation()
+    +getChild(int): Component
 }
 
-Composite --> Component
-Leaf --> Component
+Composite o-- Component : children
 @enduml

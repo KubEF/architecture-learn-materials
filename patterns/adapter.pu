@@ -1,16 +1,20 @@
 @startuml adapter
+hide empty members
+
 interface Target {
-    +request(): void
+    +operation()
 }
 
+class Client{}
+
 class Adapter implements Target {
-    +request(): void
+    +operation()
 }
 
 class Adaptee {
-    +specificRequest(): void
+    +specificOperation()
 }
 
-Adapter --> Target
-Adapter ..> Adaptee : adapts
+Client -> Target
+Adapter -> Adaptee : adapts
 @enduml

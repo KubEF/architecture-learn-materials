@@ -1,0 +1,15 @@
+@startuml object_pull
+hide empty members
+class ObjectPool {
+  +acquire(): PooledObject
+  +release(obj: PooledObject): void
+  -available: List<PooledObject>
+  -inUse: List<PooledObject>
+}
+
+class PooledObject {
+  +reset(): void
+}
+
+ObjectPool --> PooledObject
+@enduml

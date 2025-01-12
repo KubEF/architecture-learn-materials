@@ -1,23 +1,23 @@
 @startuml strategy
+hide empty members
+
 interface Strategy {
-    +execute(): void
+    +execute() 
 }
 
 class ConcreteStrategyA implements Strategy {
-    +execute(): void
+    +execute() 
 }
 
 class ConcreteStrategyB implements Strategy {
-    +execute(): void
+    +execute()
 }
 
 class Context {
     -strategy: Strategy
     +setStrategy(strategy: Strategy): void
-    +executeStrategy(): void
+    +executeStrategy()
 }
 
-Context --> Strategy
-ConcreteStrategyA --> Strategy
-ConcreteStrategyB --> Strategy
+Context o-> Strategy
 @enduml

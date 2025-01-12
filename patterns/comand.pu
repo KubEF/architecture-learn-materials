@@ -1,21 +1,26 @@
 @startuml command
+hide empty members
+class Client{}
 interface Command {
-    +execute(): void
+    +execute()
 }
 
 class ConcreteCommand implements Command {
-    +execute(): void
+    -receiver: Receiver
+    +execute()
 }
 
 class Invoker {
+    -command: Command
     +setCommand(command: Command): void
-    +invoke(): void
+    +invoke()
 }
 
 class Receiver {
     +action(): void
 }
 
-ConcreteCommand --> Receiver
-Invoker --> Command
+Receiver <- ConcreteCommand
+Invoker o-> Command
+Client --> Receiver
 @enduml

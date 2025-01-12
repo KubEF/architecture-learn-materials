@@ -1,0 +1,22 @@
+@startuml builder
+hide empty members
+
+interface Builder {
+  +buildPart()
+}
+
+class ConcreteBuilder implements Builder {
+  +buildPart()
+  +getResult(): Product
+}
+
+class Director {
+  -builder: Builder
+  +construct(): Product
+}
+
+class Product {}
+
+Director o-> Builder
+ConcreteBuilder -> Product
+@enduml

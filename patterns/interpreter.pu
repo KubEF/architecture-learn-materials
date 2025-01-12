@@ -1,18 +1,23 @@
 @startuml interpreter
-interface Expression {
-    +interpret(context: Context): int
+hide empty members
+class Client{}
+
+interface AbstractExpression {
+    +interpret(context: Context)
 }
 
-class TerminalExpression implements Expression {
-    +interpret(context: Context): int
+class TerminalExpression implements AbstractExpression {
+    +interpret(context: Context)
 }
 
-class NonTerminalExpression implements Expression {
-    +interpret(context: Context): int
+class NonTerminalExpression implements AbstractExpression {
+    -nextExpression: AbstractExpression
+    +interpret(context: Context)
 }
 
 class Context {}
 
-TerminalExpression --> Expression
-NonTerminalExpression --> Expression
+Client -> Context
+Client --> AbstractExpression
+NonTerminalExpression o--> AbstractExpression
 @enduml

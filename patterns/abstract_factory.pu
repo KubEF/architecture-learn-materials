@@ -1,4 +1,7 @@
 @startuml abstract_factory
+hide empty members
+class Client{}
+
 interface AbstractFactory {
     +createProductA(): AbstractProductA
     +createProductB(): AbstractProductB
@@ -8,15 +11,20 @@ interface AbstractProductA
 interface AbstractProductB
 
 class ConcreteFactory1 implements AbstractFactory {
-    +createProductA(): AbstractProductA
-    +createProductB(): AbstractProductB
+    +createProductA(): ConcreteProductA1
+    +createProductB(): ConcreteProductB1
+}
+class ConcreteFactory2 implements AbstractFactory {
+    +createProductA(): ConcreteProductA2
+    +createProductB(): ConcreteProductB2
 }
 
 class ConcreteProductA1 implements AbstractProductA
+class ConcreteProductA2 implements AbstractProductA
 class ConcreteProductB1 implements AbstractProductB
+class ConcreteProductB2 implements AbstractProductB
 
-ConcreteFactory1 --> AbstractProductA
-ConcreteFactory1 --> AbstractProductB
-ConcreteProductA1 --> AbstractProductA
-ConcreteProductB1 --> AbstractProductB
+AbstractFactory <- Client
+Client --> AbstractProductA
+Client --> AbstractProductB
 @enduml

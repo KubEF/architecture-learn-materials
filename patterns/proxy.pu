@@ -1,17 +1,21 @@
 @startuml proxy
+hide empty members
+
+class Client{}
+
 interface Subject {
-    +request(): void
+    +operation()
 }
 
 class RealSubject implements Subject {
-    +request(): void
+    +operation()
 }
 
 class Proxy implements Subject {
     -realSubject: RealSubject
-    +request(): void
+    +operation()
 }
 
-RealSubject --> Subject
-Proxy --> Subject
+Client -> Subject
+Proxy -> RealSubject
 @enduml

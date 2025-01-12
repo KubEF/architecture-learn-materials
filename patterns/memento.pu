@@ -1,17 +1,29 @@
 @startuml memento
+hide empty members
+
 class Originator {
+    -state
     +createMemento(): Memento
     +restore(memento: Memento): void
 }
 
 class Memento {
     -state: String
+    +getState()
 }
 
 class Caretaker {
     -memento: Memento
 }
 
-Caretaker --> Memento
-Originator --> Memento
+note left of Originator::createMemento
+    return new Memento(state)
+end note
+
+note left of Originator::restore
+    state = memento.getState()
+end note
+
+Memento <-o  Caretaker
+Originator .> Memento
 @enduml

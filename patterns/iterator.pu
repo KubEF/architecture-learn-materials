@@ -1,22 +1,37 @@
 @startuml iterator
+hide empty members
+
+class Client{}
+
 interface Iterator {
     +next(): Element
-    +hasNext(): boolean
+    +hasNext(): Bool
+    +remove(): void
 }
 
 interface Aggregate {
     +createIterator(): Iterator
 }
 
+Aggregate <- Client
+Client -> Iterator
+
 class ConcreteIterator implements Iterator {
     +next(): Element
-    +hasNext(): boolean
+    +hasNext(): Bool
+    +remove(): void
 }
 
 class ConcreteAggregate implements Aggregate {
     +createIterator(): Iterator
 }
 
-ConcreteIterator --> Iterator
-ConcreteAggregate --> Aggregate
+note left of ConcreteAggregate::createIterator
+    return new ConcreteIterator(this)
+end note
+
+ConcreteAggregate .> ConcreteIterator
+ConcreteAggregate <- ConcreteIterator
+
+
 @enduml

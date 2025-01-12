@@ -1,21 +1,26 @@
 @startuml factory_method
+hide empty members
+
 abstract class Creator {
     +createProduct(): Product
 }
 
 abstract class Product {
-    +use(): void
+    +use()
 }
 
 class ConcreteCreator implements Creator {
-    +createProduct(): Product
+    +createProduct(): ConcreteProduct
 }
+
+note left of ConcreteCreator::createProduct
+    return new ConcreteProduct();
+end note
 
 class ConcreteProduct implements Product {
-    +use(): void
+    +use()
 }
 
-Creator --> Product
-ConcreteCreator --> Creator
-ConcreteProduct --> Product
+ConcreteCreator .> ConcreteProduct : <<instantiate>>
+
 @enduml

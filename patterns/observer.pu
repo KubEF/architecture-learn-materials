@@ -1,18 +1,29 @@
 @startuml observer
+hide empty members
+
 interface Observer {
     +update(subject: Subject): void
 }
 
-class Subject {
+class ConcreteObserver implements Observer {
+    -observerState
+    -subject: Subject
+    +update(subject: Subject): void
+}
+abstract Subject {
+    -observers: Observer [*]
     +attach(observer: Observer): void
     +detach(observer: Observer): void
     +notify(): void
 }
 
-class ConcreteObserver implements Observer {
-    +update(subject: Subject): void
+class ConcreteSubject extends Subject {
+    -subjectState
+    +getState()
+    +setState()
 }
 
-Subject --> Observer
-ConcreteObserver --> Subject
+
+Subject o-> Observer
+ConcreteSubject <- ConcreteObserver
 @enduml

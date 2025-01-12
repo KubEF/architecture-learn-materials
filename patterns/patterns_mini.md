@@ -38,6 +38,12 @@
 
 ![Flyweight](../out/patterns/flyweight/flyweight.svg)
 
+### Мост (Bridge)
+
+Позволяет разделить абстракцию от её реализации таким образом, чтобы они могли меняться независимо друг от друга.
+
+![Bridge](../out/patterns/bridge/bridge.svg)
+
 ## Порождающие паттерны
 
 ### Фабричный метод (Factory Method)
@@ -58,11 +64,29 @@
 
 ![Singleton](../out/patterns/singleton/singleton.svg)
 
+### Ленивая инициализация (Lazy initialization)
+
+Используется для откладывания создания объекта или выполнения ресурсоёмкой операции до момента их непосредственного использования.
+
+![Lazy initialization](../out/patterns/lazy_initialization/lazy_initialization.svg)
+
+### Пулл объектов (Object pull)
+
+Предоставляет способ повторного использования объектов, которые слишком дорого создавать и уничтожать.
+
+![Object pull](../out/patterns/object_pull/object_pull.svg)
+
 ### Прототип (Prototype)
 
 Позволяет создавать объекты на основе копирования существующих экземпляров.
 
 ![Prototype](../out/patterns/prototype/prototype.svg)
+
+### Строитель (Builder)
+
+Используется для пошагового создания сложных объектов. Он отделяет процесс построения объекта от его представления, позволяя создавать разные представления одного и того же типа объекта.
+
+![Builder](../out/patterns/builder/builder.svg)
 
 ## Поведенческие паттерны
 

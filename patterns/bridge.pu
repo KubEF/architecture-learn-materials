@@ -1,0 +1,29 @@
+@startuml bridge
+hide empty members
+
+class Client{}
+
+interface Implementor {
+  +operationImpl()
+}
+
+class ConcreteImplementorA implements Implementor {
+  +operationImpl()
+}
+
+class ConcreteImplementorB implements Implementor {
+  +operationImpl()
+}
+
+abstract class Abstraction {
+  -implementor: Implementor
+  +operation()
+}
+
+class RefinedAbstraction extends Abstraction {
+}
+
+Client -> Abstraction
+Abstraction o-> Implementor
+
+@enduml

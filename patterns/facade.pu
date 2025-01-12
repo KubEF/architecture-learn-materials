@@ -1,16 +1,24 @@
 @startuml facade
+hide empty members
+namespace Subsystem{
 class Facade {
-    +operation(): void
+    +operation()
 }
 
 class SubsystemA {
-    +operationA(): void
+    +operationA()
 }
 
 class SubsystemB {
-    +operationB(): void
+    +operationB()
+}
+
+class SubsystemC{
+    +operationC()
 }
 
 Facade --> SubsystemA
 Facade --> SubsystemB
+Facade --> SubsystemC
+}
 @enduml

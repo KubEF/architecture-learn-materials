@@ -1,11 +1,18 @@
 @startuml prototype
+hide empty members
+
+class Client{
+    +operation()
+}
+
 interface Prototype {
     +clone(): Prototype
 }
 
 class ConcretePrototype implements Prototype {
-    +clone(): Prototype
+    +clone(): ConcretePrototype
 }
 
-ConcretePrototype --> Prototype
+
+Client -> Prototype : prototype
 @enduml

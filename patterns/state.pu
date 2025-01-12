@@ -1,4 +1,6 @@
 @startuml state
+hide empty members
+
 interface State {
     +handle(context: Context): void
 }
@@ -14,10 +16,9 @@ class ConcreteStateB implements State {
 class Context {
     -state: State
     +setState(state: State): void
-    +request(): void
+    +request()
 }
 
-Context --> State
-ConcreteStateA --> State
-ConcreteStateB --> State
+Context o-> State
+
 @enduml

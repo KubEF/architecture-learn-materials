@@ -1,0 +1,9 @@
+@startuml lazy_initialization
+
+class LazyInitializedObject {
+  +getInstance(): LazyInitializedObject
+  -LazyInitializedObject(): LazyInitializedObject
+  -instance: LazyInitializedObject
+}
+
+@enduml

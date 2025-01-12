@@ -1,10 +1,12 @@
 @startuml mediator
+hide empty members
+
 interface Mediator {
-    +notify(sender: Component, event: String): void
+    +notify(sender: Component)
 }
 
 class ConcreteMediator implements Mediator {
-    +notify(sender: Component, event: String): void
+    +notify(sender: Component)
 }
 
 abstract class Component {
@@ -15,8 +17,7 @@ abstract class Component {
 class ConcreteComponentA extends Component {}
 class ConcreteComponentB extends Component {}
 
-Component --> Mediator
-ConcreteComponentA --> Component
-ConcreteComponentB --> Component
-ConcreteMediator --> Component
+Component -> Mediator
+ConcreteComponentA <- ConcreteMediator
+ConcreteComponentB <- ConcreteMediator
 @enduml

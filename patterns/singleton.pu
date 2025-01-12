@@ -1,7 +1,12 @@
 @startuml singleton
+hide empty members
+
 class Singleton {
-    -instance: Singleton
-    -Singleton(): void
-    +getInstance(): Singleton
+    -uniqueInstance: Singleton
+    -singletonData: Data
+    -Singleton(): Singleton
+    +getSingletonData(): Data
+    +instance(): Singleton
+    +singletonOperation()
 }
 @enduml

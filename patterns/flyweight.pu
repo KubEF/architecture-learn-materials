@@ -1,16 +1,27 @@
 @startuml flyweight
+hide empty members
+
+class Client{}
+
 class Flyweight {
-    +operation(extrinsicState: String): void
+    +operation(extrinsicState)
+}
+
+
+class FlyweightFactory {
+    +getFlyweight(key): Flyweight
 }
 
 class ConcreteFlyweight implements Flyweight {
-    +operation(extrinsicState: String): void
+    -intrinsicState
+    +operation(extrinsicState)
 }
 
-class FlyweightFactory {
-    +getFlyweight(key: String): Flyweight
+class UnsharedConcreteFlyweight implements Flyweight{
+    -fullState
+    +operation(extrinsicState)
 }
 
-FlyweightFactory --> Flyweight
-ConcreteFlyweight --> Flyweight
+Client -> FlyweightFactory
+FlyweightFactory "*"*-> Flyweight
 @enduml
