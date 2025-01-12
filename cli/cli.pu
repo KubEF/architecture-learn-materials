@@ -1,55 +1,79 @@
-@startuml cli
+@startuml
+' !pragma layout smetana
 hide empty members
+
 class Environment {
   - variables: Dict<String, String>
   + setVariable(name: String, value: String): void
   + getValue(name: String): String
 }
+note bottom of Environment
+  наследует своё содержание от запустившего;
+  PATH обязателен, если не было
+  заполняется чем-то дефолтным
+end note
 
-class Output{
+class Output {
   - exitCode: Int
   - output: String
   - errorMessage: String
+  + Output(stdout: String, stderr: String): Output
   + getOutput(): String
 }
 
-abstract Command{
+note left of Output
+  Обработка результата работы команды.
+  Может быть достаточно сложная
+  обработка  stdout и stderr в конструкторе.
+end note
+
+abstract Command.Command{
   - args: String [*]
+  + <<Create>> Command(args: String [*])
   + execute(): Output
-  + addArg(String): void
 }
 
-Command --> Output
-class Cat{}
-class Pwd{}
-class Echo{}
-class Wc{}
-class Bind{}
-class External{
-  - binFiles: Path [*]
-  - isFullPathToExecutable: Bool
-  + executableExists(): Bool
-}
-class Exit{}
+Command.Command --> Output
 
-Cat --|> Command
-Pwd --|> Command
-Echo --|> Command
-Wc --|> Command
-Bind --|> Command
-External --|> Command
-Exit --|> Command
+class Command.Cat{}
+class Command.Pwd{}
+class Command.Echo{}
+class Command.Wc{}
+class Command.Bind{}
+note top of Bind : присваивание значения переменной
+class Command.Exit{}
+
+class Command.External{
+  - needsPathExtension(): Bool
+  - findExecutable(env: Environment) : String
+  + executableExists(env: Environment): Bool
+}
+note top of External
+  executableExists() проверяет наличие исполняемого файла
+  в зависимости от результата needsPathExtension()
+  True -> ищем в PATH через findExecutable()
+  False -> проверяем существование и флаги
+end note
+
+Cat --|> Command.Command
+Pwd --|> Command.Command
+Echo --|> Command.Command
+Wc --|> Command.Command
+Bind --|> Command.Command
+Exit --|> Command.Command
+
+External --|> Command.Command
 
 class CommandQueue{
   - commands: Command [*]
   + addCommand(command: Command): void
   + popCommand(): Command
 }
-CommandQueue --> Command
+note top of CommandQueue : обёртка над контейнером
+CommandQueue --> Command.Command
+
 
 class CommandRunner {
-  - commandsQueue: CommandQueue
-  - env: Environment
   + executeCommands(): Output
 }
 
@@ -64,67 +88,110 @@ Main --> CommandRunner
 
 class CommandLine{
   - prompt: String
-  + read(): String
-  + write(output: Output): void
+  + {static} read(): String
+  + {static} write(output: Output): void
   + setPrompt(prompt: String): void
 }
+note bottom of CommandLine : класс из внешней библиотеки
+note left of CommandLine::setPrompt
+  устанавливает вид приглашения к вводу
+end note
 
 Main --> CommandLine
+CommandRunner --> CommandLine
 
-interface Token{
-  - value: String
-  + getValue(): String 
+class Substituter.Substituter {
+  + parse(input: String) : String
+}
+note top of Substituter.Substituter : по сути система переписываний
+
+Main --> Substituter.Substituter
+Substituter.Substituter --> Substituter.SubstituterState : state
+Substituter.Substituter --> Environment
+
+abstract Substituter.SubstituterState {
+  - accumulated: String
+  - previousState: SubstituterState
+  + consume(char: Char) : void
 }
 
-class QuotedString{}
-class PlainWord{}
-class Pipe{}
-class EqualsSymbol{}
+class Substituter.S_DefaultState{}
+note top of Substituter.S_DefaultState
+  просто читаем строку
+  ничего не делая
+end note
+class Substituter.S_WeakQuoteState{}
+note top of Substituter.S_WeakQuoteState
+  отсюда можем переходить в
+  S_VariableState
+end note
+class Substituter.S_StrongQuoteState{}
+note top of S_StrongQuoteState
+  отсюда НЕ можем переходить
+  в S_VariableState
+end note
+class Substituter.S_VariableState{
+  - substitute()
+}
+note top of Substituter.S_VariableState
+  вычитываем название
+  переменной и подставляем
+end note
+
+S_DefaultState --|> SubstituterState
+S_WeakQuoteState --|> SubstituterState
+S_StrongQuoteState --|> SubstituterState
+S_VariableState --|> SubstituterState
+
+interface Parser.Token{
+  - value: String
+  + getValue(): String
+}
+
+class Parser.QuotedString{}
+class Parser.PlainWord{}
+class Parser.Pipe{}
+class Parser.EqualsSymbol{}
 
 QuotedString --|> Token
 PlainWord --|> Token
 Pipe --|> Token
 EqualsSymbol --|> Token
 
-
-abstract TokenizerState{
-  - env: Environment
-  - accumulated: String
-  - splitters: String [*]
+abstract Parser.TokenizerState{
   + tokenize(): Token
-  + addToAccumulated(char: Char): void
 }
 
-TokenizerState --> Token
+class Parser.T_DefaultState{}
+note bottom of Parser.T_DefaultState
+  просто вычитаваем строку,
+  разбиваем на токены
+end note
 
-class TokenizerNormal{
-  ' + toVariableState(): TokenizerVariable
-}
+class Parser.T_QuotedStringState{}
+note bottom of Parser.T_QuotedStringState
+  собираем всё, что в кавычках (любых)
+  в один аргумент
+end note
 
-class TokenizerStronglyQuoted{}
+T_DefaultState --|> TokenizerState
+T_QuotedStringState --|> TokenizerState
 
-class TokenizerWeaklyQuoted{
-  ' + toVariableState(): TokenizerVariable
-}
-
-class TokenizerVariable{}
-
-TokenizerNormal --|> TokenizerState
-TokenizerStronglyQuoted --|> TokenizerState
-TokenizerWeaklyQuoted --|> TokenizerState
-TokenizerVariable --|> TokenizerState
-TokenizerState --> Environment
-
-
-class Parser{
-  - input: String
-  - startTokenizerState: TokenizerState
+class Parser.Parser{
   - tokenize(): Token [*]
-  + parse(): CommandQueue
+  + parse(input: String): CommandQueue
+}
+note top of Parser.Parser
+  простой, но стандартный парсер
+end note
+
+class Parser.Tokenizer{
+  + tokenize(input: String) : Token [*]
 }
 
-Parser --> TokenizerState
+Parser.Parser --> Tokenizer
+Tokenizer --> Token
+Tokenizer --> TokenizerState : state
 
-Main --> Parser
-
+Main --> Parser.Parser
 @enduml
